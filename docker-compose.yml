@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  server_a:
+    image: python:3.11-slim
+    container_name: server_a
+    working_dir: /app
+    volumes:
+      - ./server_a:/app
+    ports:
+      - "5001:5001"
+    command: >
+      /bin/sh -c "pip install -r requirements.txt &&
+                  flask run --host=0.0.0.0 --port=5001"
+    environment:
+      - FLASK_APP=app.py
+    networks:
+      - mi_red
+
+  server_b:
+    image: python:3.11-slim
+    container_name: server_b
+    working_dir: /app
+    volumes:
+      - ./server_b:/app
+    ports:
+      - "5000:5000"
+    command: >
+      /bin/sh -c "pip install -r requirements.txt &&
+                  flask run --host=0.0.0.0 --port=5000"
+    environment:
+      - FLASK_APP=app.py
+    networks:
+      - mi_red
+
+networks:
+  mi_red:
+    driver: bridge
